@@ -4,78 +4,84 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MonoBlatformer
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : Game
     {
+        const int SCREENWIDTH = 384, SCREENHEIGHT = 216;
+        const bool FULLSCREEN = false;
+
+        //SOURCE RECTANGLES
+        Rectangle screenRect, desktopRect;
+
+        //RENDERTARGETS
+        RenderTarget2D MainTarget;                          
+        // render to a standard target and fit it to the desktop resolution
+        static public int screenW, screenH;
+        //to know current resolution
+
         GraphicsDeviceManager graphics;
+        PresentationParameters pp;
         SpriteBatch spriteBatch;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            // Set a display mode that is windowed but is the same as the desktop's current resolution (don't show a border)...
+            // This is done instead of using true fullscreen mode since some firewalls will crash the computer in true fullscreen mode
+            int initial_screen_width = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width - 10;
+            int initial_screen_height = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height - 10;
+            graphics = new GraphicsDeviceManager(this)
+            {
+                PreferredBackBufferWidth = initial_screen_width,
+                PreferredBackBufferHeight = initial_screen_height,
+                IsFullScreen = false,
+                PreferredDepthStencilFormat = DepthFormat.Depth16
+            };
+            Window.IsBorderless = true;
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            MainTarget = new RenderTarget2D(GraphicsDevice, SCREENWIDTH, SCREENHEIGHT);
+            pp = GraphicsDevice.PresentationParameters;
+            SurfaceFormat format = pp.BackBufferFormat;
+            screenW = MainTarget.Width;
+            screenH = MainTarget.Height;
+            desktopRect = new Rectangle(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
+            screenRect = new Rectangle(0, 0, screenW, screenH);
 
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// game-specific content.
-        /// </summary>
         protected override void UnloadContent()
         {
-            // TODO: Unload any non ContentManager content here
+
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            // TODO: Add your update logic here
 
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
+        
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.SetRenderTarget(MainTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap);
 
-            // TODO: Add your drawing code here
+            spriteBatch.End();
+
+            GraphicsDevice.SetRenderTarget(null);
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.Opaque, SamplerState.LinearWrap, DepthStencilState.None, RasterizerState.CullNone);
+            spriteBatch.Draw(MainTarget, desktopRect, Color.White);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }
