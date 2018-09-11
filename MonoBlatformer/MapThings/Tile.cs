@@ -11,8 +11,7 @@ namespace MonoBlatformer.MapThings
 
     public class Tile
     {
-        private Rectangle _sourceRectangle;
-
+        public Rectangle SourceRectangle { get; }
         public TileType TileType { get; }
         public bool IsGround { get; }
         public bool IsSolid { get; }
@@ -26,7 +25,7 @@ namespace MonoBlatformer.MapThings
             IsSolid = isSolid;
             IsEmpty = IsEmpty;
             IsOneWay = isOneWay;
-            _sourceRectangle = srcRect;
+            SourceRectangle = srcRect;
         }
     }
 }

@@ -23,6 +23,7 @@ namespace MonoBlatformer.MapThings
         public int TileHeight { get { return _tileHeight; } }
         //public TileManager TileManager { get { return _tileManager; } }
         public Tile[,] Tiles { get { return _tiles; } }
+        public Texture2D TileSet { get { return _tileSet; } }
 
         public void Initialize(int width, int height, int tileWidth, int tileHeight, Texture2D tileSet)
         {

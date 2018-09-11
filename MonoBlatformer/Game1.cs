@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoBlatformer.MapThings;
 
 namespace MonoBlatformer
 {
@@ -21,6 +22,8 @@ namespace MonoBlatformer
         GraphicsDeviceManager graphics;
         PresentationParameters pp;
         SpriteBatch spriteBatch;
+
+        Map map;
 
         public Game1()
         {
@@ -49,12 +52,16 @@ namespace MonoBlatformer
             desktopRect = new Rectangle(0, 0, pp.BackBufferWidth, pp.BackBufferHeight);
             screenRect = new Rectangle(0, 0, screenW, screenH);
 
+            map = new Map();
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            Texture2D tileSet = Content.Load<Texture2D>("jungletileset");
+            map.Initialize(24, 13, 16, 16, tileSet);
         }
 
         protected override void UnloadContent()
@@ -75,7 +82,13 @@ namespace MonoBlatformer
             GraphicsDevice.SetRenderTarget(MainTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap);
-
+            for (int i = 0; i < map.Width; i++)
+            {
+                for (int j = 0; j < map.Height; j++)
+                {
+                    spriteBatch.Draw(map.TileSet, new Rectangle(i * map.TileWidth, j * map.TileHeight, map.TileWidth, map.TileHeight), map.Tiles[i, j].SourceRectangle, Color.White);
+                }
+            }
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);
