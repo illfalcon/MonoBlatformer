@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +57,30 @@ namespace MonoBlatformer.MapThings
             {
                 _tiles[i, Height - 1] = _tileManager.Tiles[11];
             }
+        }
+
+        public Vector2 GetTileFromCoordinates(float wX, float wY)
+        {
+            int mX = (int)(wX/_tileWidth);
+            int mY = (int)(wY/_tileHeight);
+            return new Vector2(mX, mY);
+        }
+
+        public Vector2 GetCoordinatesFromTile(int mX, int mY)
+        {
+            float wX = mX * _tileWidth;
+            float wY = mY * _tileHeight;
+            return new Vector2(wX, wY);
+        }
+
+        public Tile GetTile(int x, int y)
+        {
+            return Tiles[x, y];
+        }
+
+        public Tile GetTile(Vector2 coords)
+        {
+            return Tiles[(int)coords.X, (int)coords.Y];
         }
     }
 }
