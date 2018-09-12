@@ -43,9 +43,12 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="Game1.cs" />
+    <Compile Include="Helpers\Animation.cs" />
+    <Compile Include="Helpers\Input.cs" />
     <Compile Include="MapThings\Map.cs" />
     <Compile Include="MapThings\Tile.cs" />
     <Compile Include="MapThings\TileManager.cs" />
+    <Compile Include="Objects\Character.cs" />
     <Compile Include="Objects\MovingObject.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
