@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using MonoBlatformer.Helpers;
 using MonoBlatformer.MapThings;
+using MonoBlatformer.Objects;
 
 namespace MonoBlatformer
 {
@@ -24,6 +26,7 @@ namespace MonoBlatformer
         SpriteBatch spriteBatch;
 
         Map map;
+        Character character;
 
         public Game1()
         {
@@ -53,6 +56,7 @@ namespace MonoBlatformer
             screenRect = new Rectangle(0, 0, screenW, screenH);
 
             map = new Map();
+            character = new Character();
 
             base.Initialize();
         }
@@ -62,6 +66,26 @@ namespace MonoBlatformer
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Texture2D tileSet = Content.Load<Texture2D>("jungletileset");
             map.Initialize(24, 13, 16, 16, tileSet);
+
+            Texture2D jump = Content.Load<Texture2D>("Player/jump");
+            Texture2D run = Content.Load<Texture2D>("Player/runsheet");
+            Texture2D land = Content.Load<Texture2D>("Player/landing");
+            Texture2D idle = Content.Load<Texture2D>("Player/idlesheet");
+            Texture2D fly = Content.Load<Texture2D>("Player/flysheet");
+            Texture2D ledge = Content.Load<Texture2D>("Player/ledgesheet");
+            Animation jumpAnimation = new Animation();
+            jumpAnimation.Initialize(jump, 1, 60, 1, Color.White, 17, 34, false);
+            Animation runAnimation = new Animation();
+            runAnimation.Initialize(run, 1, 60, 8, Color.White, 21, 33, true);
+            Animation flyAnimation = new Animation();
+            flyAnimation.Initialize(fly, 1, 60, 2, Color.White, 20, 35, true);
+            Animation idleAnimation = new Animation();
+            idleAnimation.Initialize(idle, 1, 60, 12, Color.White, 19, 34, true);
+            Animation landAnimation = new Animation();
+            landAnimation.Initialize(land, 1, 60, 1, Color.White, 20, 35, false);
+            Animation ledgeAnimation = new Animation();
+            ledgeAnimation.Initialize(ledge, 1, 100, 6, Color.White, 20, 40, false);
+            character.Initialize(new Vector2(100, 100), 21, 35, map, idleAnimation, runAnimation, flyAnimation, jumpAnimation, landAnimation, ledgeAnimation, 5, 10);
         }
 
         protected override void UnloadContent()
@@ -73,7 +97,7 @@ namespace MonoBlatformer
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
+            character.Update(gameTime);
             base.Update(gameTime);
         }
         
@@ -89,6 +113,7 @@ namespace MonoBlatformer
                     spriteBatch.Draw(map.TileSet, new Rectangle(i * map.TileWidth, j * map.TileHeight, map.TileWidth, map.TileHeight), map.Tiles[i, j].SourceRectangle, Color.White);
                 }
             }
+            character.Draw(spriteBatch);
             spriteBatch.End();
 
             GraphicsDevice.SetRenderTarget(null);

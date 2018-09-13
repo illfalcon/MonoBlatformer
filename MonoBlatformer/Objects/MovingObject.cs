@@ -24,14 +24,14 @@ namespace MonoBlatformer.Objects
 
     public class MovingObject
     {
-        private AABB _AABB;
-        private Map _map;
-        private Vector2 _speed;
-        private Vector2 _oldAABBPosition;
-        private bool _isOnGround;
-        private bool _hasLeftWall;
-        private bool _hasRightWall;
-        private bool _isAtCeiling;
+        protected AABB _AABB;
+        protected Map _map;
+        protected Vector2 _speed;
+        protected Vector2 _oldAABBPosition;
+        protected bool _isOnGround;
+        protected bool _hasLeftWall;
+        protected bool _hasRightWall;
+        protected bool _isAtCeiling;
 
         public virtual void Initialize(Vector2 position, int width, int height, Map map)
         {
