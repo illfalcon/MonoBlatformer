@@ -95,6 +95,7 @@ namespace MonoBlatformer.Objects
 
         public void Update(GameTime gameTime)
         {
+            _oldAABBPosition = _AABB.Position;
             UpdatePlayer();
             UpdatePhysics();
             UpdateGroundCollision();
