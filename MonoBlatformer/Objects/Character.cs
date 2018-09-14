@@ -142,21 +142,12 @@ namespace MonoBlatformer.Objects
             }
         }
 
-        public void UpdatePhysics()
-        {
-            _AABB.Position += _speed;
-            _curAnimation.Position = new Vector2(_AABB.Position.X + (_AABB.Width - _curAnimation.FrameWidth) / 2, _AABB.Position.Y + (_AABB.Height - _curAnimation.FrameHeight));
-        }
-
         public void Update(GameTime gameTime)
         {
             _oldAABBPosition = _AABB.Position;
             UpdatePlayer();
             UpdatePhysics();
-            UpdateGroundCollision();
-            UpdateCeilingCollision();
-            UpdateLeftWallCollision();
-            UpdateRightWallCollision();
+            _curAnimation.Position = new Vector2(_AABB.Position.X + (_AABB.Width - _curAnimation.FrameWidth) / 2, _AABB.Position.Y + (_AABB.Height - _curAnimation.FrameHeight));
             _curAnimation.Update(gameTime);
         }
 

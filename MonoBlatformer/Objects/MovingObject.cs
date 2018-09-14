@@ -239,5 +239,15 @@ namespace MonoBlatformer.Objects
                 _hasRightWall = false;
             }
         }
+
+        public void UpdatePhysics()
+        {
+            _AABB.Position += _speed;
+            UpdateGroundCollision();
+            UpdateCeilingCollision();
+            UpdateLeftWallCollision();
+            UpdateRightWallCollision();
+        }
+
     }
 }
