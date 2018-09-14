@@ -31,7 +31,6 @@ namespace MonoBlatformer.Objects
         protected bool _isOnGround;
         protected bool _hasLeftWall;
         protected bool _hasRightWall;
-        protected bool _isAtCeiling;
 
         public virtual void Initialize(Vector2 position, int width, int height, Map map)
         {
@@ -110,6 +109,76 @@ namespace MonoBlatformer.Objects
             return false;
         }
 
+        public bool HasLeftWall(out float leftWallX)
+        {
+            Vector2 oldTopLeft = new Vector2(_oldAABBPosition.X - 1, _oldAABBPosition.Y);
+            Vector2 newTopLeft = new Vector2(_AABB.Position.X - 1, _AABB.Position.Y);
+
+            int endX = (int)_map.GetTileFromCoordinates(newTopLeft.X, newTopLeft.Y).X;
+            int begX = Math.Max(endX, (int)_map.GetTileFromCoordinates(oldTopLeft.X, oldTopLeft.Y).X);
+            float dist = Math.Max(begX - endX, 1);
+
+            for (int tileX = begX; tileX >= endX; tileX--)
+            {
+                var topLeft = Vector2.Lerp(oldTopLeft, newTopLeft, (tileX - endX) / dist);
+                var bottomLeft = topLeft + new Vector2(0, _AABB.Height);
+
+                Vector2 mapTileCoords;
+                Tile tile;
+                for (var checkedTile = topLeft.Y; ; checkedTile += _map.TileHeight)
+                {
+                    checkedTile = Math.Min(checkedTile, bottomLeft.Y);
+                    mapTileCoords = _map.GetTileFromCoordinates(topLeft.X, checkedTile);
+                    tile = _map.GetTile(mapTileCoords);
+                    if (tile.IsSolid)
+                    {
+                        leftWallX = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).Y;
+                        return true;
+                    }
+                    if (checkedTile >= bottomLeft.X)
+                        break;
+                }
+            }
+
+            leftWallX = 0;
+            return false;
+        }
+
+        public bool HasRightWall(out float rightWallX)
+        {
+            Vector2 oldTopRight = new Vector2(_oldAABBPosition.X + _AABB.Width + 1, _oldAABBPosition.Y);
+            Vector2 newTopRight = new Vector2(_AABB.Position.X + _AABB.Width + 1, _AABB.Position.Y);
+
+            int endX = (int)_map.GetTileFromCoordinates(newTopRight.X, newTopRight.Y).X;
+            int begX = Math.Min(endX, (int)_map.GetTileFromCoordinates(oldTopRight.X, oldTopRight.Y).X);
+            float dist = Math.Max(endX - begX, 1);
+
+            for (int tileX = begX; tileX <= endX; tileX++)
+            {
+                var topRight = Vector2.Lerp(oldTopRight, newTopRight, (tileX - begX) / dist);
+                var bottomRight = topRight + new Vector2(0, _AABB.Height);
+
+                Vector2 mapTileCoords;
+                Tile tile;
+                for (var checkedTile = topRight.Y; ; checkedTile += _map.TileHeight)
+                {
+                    checkedTile = Math.Min(checkedTile, bottomRight.Y);
+                    mapTileCoords = _map.GetTileFromCoordinates(topRight.X, checkedTile);
+                    tile = _map.GetTile(mapTileCoords);
+                    if (tile.IsSolid)
+                    {
+                        rightWallX = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).Y;
+                        return true;
+                    }
+                    if (checkedTile >= bottomRight.X)
+                        break;
+                }
+            }
+
+            rightWallX = 0;
+            return false;
+        }
+
         public void UpdateGroundCollision()
         {
             float groundY = 0;
@@ -132,6 +201,36 @@ namespace MonoBlatformer.Objects
             {
                 _speed.Y = 0;
                 _AABB.Position = new Vector2(_AABB.Position.X, ceilingY);
+            }
+        }
+
+        public void UpdateLeftWallCollision()
+        {
+            float leftWallX;
+            if (HasLeftWall(out leftWallX))
+            {
+                _speed.X = 0;
+                _AABB.Position = new Vector2(leftWallX, _AABB.Position.Y);
+                _hasLeftWall = true;
+            }
+            else
+            {
+                _hasLeftWall = false;
+            }
+        }
+
+        public void UpdateRightWallCollision()
+        {
+            float rightWallX;
+            if (HasRightWall(out rightWallX))
+            {
+                _speed.X = 0;
+                _AABB.Position = new Vector2(rightWallX - _AABB.Width, _AABB.Position.Y);
+                _hasRightWall = true;
+            }
+            else
+            {
+                _hasRightWall = false;
             }
         }
     }
