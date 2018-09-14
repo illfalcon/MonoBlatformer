@@ -97,7 +97,7 @@ namespace MonoBlatformer.Objects
                     tile = _map.GetTile(mapTileCoords);
                     if (tile.IsSolid)
                     {
-                        ceilingY = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).Y;
+                        ceilingY = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).Y + _map.TileHeight;
                         return true;
                     }
                     if (checkedTile >= topRight.X)
@@ -111,8 +111,8 @@ namespace MonoBlatformer.Objects
 
         public bool HasLeftWall(out float leftWallX)
         {
-            Vector2 oldTopLeft = new Vector2(_oldAABBPosition.X - 1, _oldAABBPosition.Y);
-            Vector2 newTopLeft = new Vector2(_AABB.Position.X - 1, _AABB.Position.Y);
+            Vector2 oldTopLeft = new Vector2(_oldAABBPosition.X, _oldAABBPosition.Y - 1);
+            Vector2 newTopLeft = new Vector2(_AABB.Position.X, _AABB.Position.Y - 1);
 
             int endX = (int)_map.GetTileFromCoordinates(newTopLeft.X, newTopLeft.Y).X;
             int begX = Math.Max(endX, (int)_map.GetTileFromCoordinates(oldTopLeft.X, oldTopLeft.Y).X);
@@ -121,21 +121,21 @@ namespace MonoBlatformer.Objects
             for (int tileX = begX; tileX >= endX; tileX--)
             {
                 var topLeft = Vector2.Lerp(oldTopLeft, newTopLeft, (tileX - endX) / dist);
-                var bottomLeft = topLeft + new Vector2(0, _AABB.Height);
+                var bottomLeft = topLeft + new Vector2(0, _AABB.Height - 2);
 
                 Vector2 mapTileCoords;
                 Tile tile;
                 for (var checkedTile = topLeft.Y; ; checkedTile += _map.TileHeight)
                 {
-                    checkedTile = Math.Min(checkedTile, bottomLeft.Y);
+                    checkedTile = Math.Min(bottomLeft.Y, checkedTile);
                     mapTileCoords = _map.GetTileFromCoordinates(topLeft.X, checkedTile);
                     tile = _map.GetTile(mapTileCoords);
                     if (tile.IsSolid)
                     {
-                        leftWallX = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).Y;
+                        leftWallX = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).X + _map.TileWidth;
                         return true;
                     }
-                    if (checkedTile >= bottomLeft.X)
+                    if (checkedTile >= bottomLeft.Y)
                         break;
                 }
             }
@@ -146,8 +146,8 @@ namespace MonoBlatformer.Objects
 
         public bool HasRightWall(out float rightWallX)
         {
-            Vector2 oldTopRight = new Vector2(_oldAABBPosition.X + _AABB.Width + 1, _oldAABBPosition.Y);
-            Vector2 newTopRight = new Vector2(_AABB.Position.X + _AABB.Width + 1, _AABB.Position.Y);
+            Vector2 oldTopRight = new Vector2(_oldAABBPosition.X + _AABB.Width, _oldAABBPosition.Y + 1);
+            Vector2 newTopRight = new Vector2(_AABB.Position.X + _AABB.Width, _AABB.Position.Y + 1);
 
             int endX = (int)_map.GetTileFromCoordinates(newTopRight.X, newTopRight.Y).X;
             int begX = Math.Min(endX, (int)_map.GetTileFromCoordinates(oldTopRight.X, oldTopRight.Y).X);
@@ -156,21 +156,21 @@ namespace MonoBlatformer.Objects
             for (int tileX = begX; tileX <= endX; tileX++)
             {
                 var topRight = Vector2.Lerp(oldTopRight, newTopRight, (tileX - begX) / dist);
-                var bottomRight = topRight + new Vector2(0, _AABB.Height);
+                var bottomRight = topRight + new Vector2(0, _AABB.Height - 2);
 
                 Vector2 mapTileCoords;
                 Tile tile;
                 for (var checkedTile = topRight.Y; ; checkedTile += _map.TileHeight)
                 {
-                    checkedTile = Math.Min(checkedTile, bottomRight.Y);
+                    checkedTile = Math.Min(bottomRight.Y, checkedTile);
                     mapTileCoords = _map.GetTileFromCoordinates(topRight.X, checkedTile);
                     tile = _map.GetTile(mapTileCoords);
                     if (tile.IsSolid)
                     {
-                        rightWallX = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).Y;
+                        rightWallX = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).X;
                         return true;
                     }
-                    if (checkedTile >= bottomRight.X)
+                    if (checkedTile >= bottomRight.Y)
                         break;
                 }
             }
@@ -209,8 +209,11 @@ namespace MonoBlatformer.Objects
             float leftWallX;
             if (HasLeftWall(out leftWallX))
             {
-                _speed.X = 0;
-                _AABB.Position = new Vector2(leftWallX, _AABB.Position.Y);
+                if (_oldAABBPosition.X > _AABB.Position.X)
+                {
+                    _speed.X = 0;
+                    _AABB.Position = new Vector2(leftWallX, _AABB.Position.Y);
+                }
                 _hasLeftWall = true;
             }
             else
@@ -224,8 +227,11 @@ namespace MonoBlatformer.Objects
             float rightWallX;
             if (HasRightWall(out rightWallX))
             {
-                _speed.X = 0;
-                _AABB.Position = new Vector2(rightWallX - _AABB.Width, _AABB.Position.Y);
+                if (_oldAABBPosition.X < _AABB.Position.X)
+                {
+                    _speed.X = 0;
+                    _AABB.Position = new Vector2(rightWallX - _AABB.Width, _AABB.Position.Y);
+                }
                 _hasRightWall = true;
             }
             else

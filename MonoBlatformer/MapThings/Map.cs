@@ -57,6 +57,10 @@ namespace MonoBlatformer.MapThings
             {
                 _tiles[i, Height - 1] = _tileManager.Tiles[11];
             }
+            for (int i = 10; i < Width; i++)
+            {
+                _tiles[i, Height - 3] = _tileManager.Tiles[11];
+            }
         }
 
         public Vector2 GetTileFromCoordinates(float wX, float wY)

@@ -48,7 +48,8 @@ namespace MonoBlatformer.Objects
             _input.Update();
             if (_curState == PlayerState.Stand)
             {
-                if (_isOnGround == true)
+                _curAnimation = _idleAnimation;
+                if (_isOnGround)
                 {
                     if (_input.LeftDown != _input.RightDown)
                     {
@@ -61,7 +62,7 @@ namespace MonoBlatformer.Objects
                     if (_input.UpPressed)
                     {
                         _curState = PlayerState.InAir;
-                        _speed.Y -= _jumpSpeed;
+                        _speed.Y = -_jumpSpeed;
                         _isOnGround = false;
                         _curAnimation = _flyAnimation;
                     }
@@ -73,8 +74,61 @@ namespace MonoBlatformer.Objects
                 }
             }
 
+            if (_curState == PlayerState.Run)
+            {
+                _curAnimation = _runAnimation;
+                if (!_isOnGround)
+                {
+                    _curState = PlayerState.InAir;
+                    _curAnimation = _flyAnimation;
+                }
+                else
+                {
+                    if (_input.LeftDown == _input.RightDown)
+                    {
+                        _speed.X = 0;
+                        _curState = PlayerState.Stand;
+                        _curAnimation = _idleAnimation;
+                    }
+                    else if (_input.LeftDown)
+                    {
+                        _fx = SpriteEffects.FlipHorizontally;
+                        if (_hasLeftWall)
+                        {
+                            _speed.X = 0;
+                            _curAnimation = _idleAnimation;
+                        }
+                        else
+                        {
+                            _speed.X = -_runSpeed;
+                        }
+                    }
+                    else if (_input.RightDown)
+                    {
+                        _fx = SpriteEffects.None;
+                        if (_hasRightWall)
+                        {
+                            _speed.X = 0;
+                            _curAnimation = _idleAnimation;
+                        }
+                        else
+                        {
+                            _speed.X = _runSpeed;
+                        }
+                    }
+                    if (_input.UpPressed)
+                    {
+                        _curState = PlayerState.InAir;
+                        _speed.Y = -_jumpSpeed;
+                        _isOnGround = false;
+                        _curAnimation = _flyAnimation;
+                    }
+                }
+            }
+
             if (_curState == PlayerState.InAir)
             {
+                _curAnimation = _flyAnimation;
                 if (_isOnGround)
                 {
                     _curState = PlayerState.Stand;
@@ -100,6 +154,9 @@ namespace MonoBlatformer.Objects
             UpdatePlayer();
             UpdatePhysics();
             UpdateGroundCollision();
+            UpdateCeilingCollision();
+            UpdateLeftWallCollision();
+            UpdateRightWallCollision();
             _curAnimation.Update(gameTime);
         }
 

@@ -65,7 +65,7 @@ namespace MonoBlatformer
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Texture2D tileSet = Content.Load<Texture2D>("jungletileset");
-            map.Initialize(24, 13, 16, 16, tileSet);
+            map.Initialize(100, 13, 16, 16, tileSet);
 
             Texture2D jump = Content.Load<Texture2D>("Player/jump");
             Texture2D run = Content.Load<Texture2D>("Player/runsheet");
@@ -85,7 +85,7 @@ namespace MonoBlatformer
             landAnimation.Initialize(land, 1, 60, 1, Color.White, 20, 35, false);
             Animation ledgeAnimation = new Animation();
             ledgeAnimation.Initialize(ledge, 1, 100, 6, Color.White, 20, 40, false);
-            character.Initialize(new Vector2(100, 100), 21, 35, map, idleAnimation, runAnimation, flyAnimation, jumpAnimation, landAnimation, ledgeAnimation, 5, 10);
+            character.Initialize(new Vector2(100, 100), 21, 35, map, idleAnimation, runAnimation, flyAnimation, jumpAnimation, landAnimation, ledgeAnimation, 3, 10);
         }
 
         protected override void UnloadContent()
