@@ -62,6 +62,7 @@ namespace MonoBlatformer.Objects
                     {
                         _curState = PlayerState.InAir;
                         _speed.Y -= _jumpSpeed;
+                        _isOnGround = false;
                         _curAnimation = _flyAnimation;
                     }
                 }
