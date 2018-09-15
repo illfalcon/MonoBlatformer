@@ -22,7 +22,6 @@ namespace MonoBlatformer.MapThings
         public int Height { get { return _height; } } // in tiles
         public int TileWidth { get { return _tileWidth; } }
         public int TileHeight { get { return _tileHeight; } }
-        //public TileManager TileManager { get { return _tileManager; } }
         public Tile[,] Tiles { get { return _tiles; } }
         public Texture2D TileSet { get { return _tileSet; } }
 
@@ -57,10 +56,15 @@ namespace MonoBlatformer.MapThings
             {
                 _tiles[i, Height - 1] = _tileManager.Tiles[11];
             }
-            for (int i = 10; i < Width; i++)
+            for (int i = 11; i < Width; i++)
             {
                 _tiles[i, Height - 3] = _tileManager.Tiles[11];
             }
+
+            _tiles[10, Height - 2] = _tileManager.Tiles[12];
+            _tiles[10, Height - 3] = _tileManager.Tiles[13];
+            _tiles[10, Height - 4] = _tileManager.Tiles[13];
+            _tiles[10, Height - 5] = _tileManager.Tiles[13];
         }
 
         public Vector2 GetTileFromCoordinates(float wX, float wY)

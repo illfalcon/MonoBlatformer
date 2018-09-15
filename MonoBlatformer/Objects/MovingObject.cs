@@ -31,6 +31,7 @@ namespace MonoBlatformer.Objects
         protected bool _isOnGround;
         protected bool _hasLeftWall;
         protected bool _hasRightWall;
+        protected bool _hasCeiling;
 
         public virtual void Initialize(Vector2 position, int width, int height, Map map)
         {
@@ -41,8 +42,8 @@ namespace MonoBlatformer.Objects
 
         public bool HasGround(out float groundY)
         {
-            Vector2 oldBottomLeft = new Vector2(_oldAABBPosition.X, _oldAABBPosition.Y + _AABB.Height + 1);
-            Vector2 newBottomLeft = new Vector2(_AABB.Position.X, _AABB.Position.Y + _AABB.Height + 1);
+            Vector2 oldBottomLeft = new Vector2(_oldAABBPosition.X + 1, _oldAABBPosition.Y + _AABB.Height + 1);
+            Vector2 newBottomLeft = new Vector2(_AABB.Position.X + 1, _AABB.Position.Y + _AABB.Height + 1);
 
             int endY = (int)_map.GetTileFromCoordinates(newBottomLeft.X, newBottomLeft.Y).Y;
             int begY = Math.Min(endY, (int)_map.GetTileFromCoordinates(oldBottomLeft.X, oldBottomLeft.Y).Y);
@@ -51,7 +52,7 @@ namespace MonoBlatformer.Objects
             for (int tileY = begY; tileY <= endY; tileY++)
             {
                 var bottomLeft = Vector2.Lerp(oldBottomLeft, newBottomLeft, (tileY - begY) / dist);
-                var bottomRight = bottomLeft + new Vector2(_AABB.Width, 0);
+                var bottomRight = bottomLeft + new Vector2(_AABB.Width - 2, 0);
 
                 Vector2 mapTileCoords;
                 Tile tile;
@@ -76,8 +77,8 @@ namespace MonoBlatformer.Objects
 
         public bool HasCeiling(out float ceilingY)
         {
-            Vector2 oldTopLeft = new Vector2(_oldAABBPosition.X, _oldAABBPosition.Y - 1);
-            Vector2 newTopLeft = new Vector2(_AABB.Position.X, _AABB.Position.Y - 1);
+            Vector2 oldTopLeft = new Vector2(_oldAABBPosition.X + 1, _oldAABBPosition.Y - 1);
+            Vector2 newTopLeft = new Vector2(_AABB.Position.X + 1, _AABB.Position.Y - 1);
 
             int endY = (int)_map.GetTileFromCoordinates(newTopLeft.X, newTopLeft.Y).Y;
             int begY = Math.Max(endY, (int)_map.GetTileFromCoordinates(oldTopLeft.X, oldTopLeft.Y).Y);
@@ -86,7 +87,7 @@ namespace MonoBlatformer.Objects
             for (int tileY = begY; tileY >= endY; tileY--)
             {
                 var topLeft = Vector2.Lerp(oldTopLeft, newTopLeft, (tileY - endY) / dist);
-                var topRight = topLeft + new Vector2(_AABB.Width, 0);
+                var topRight = topLeft + new Vector2(_AABB.Width - 2, 0);
 
                 Vector2 mapTileCoords;
                 Tile tile;
@@ -111,8 +112,8 @@ namespace MonoBlatformer.Objects
 
         public bool HasLeftWall(out float leftWallX)
         {
-            Vector2 oldTopLeft = new Vector2(_oldAABBPosition.X, _oldAABBPosition.Y - 1);
-            Vector2 newTopLeft = new Vector2(_AABB.Position.X, _AABB.Position.Y - 1);
+            Vector2 oldTopLeft = new Vector2(_oldAABBPosition.X - 1, _oldAABBPosition.Y - 1);
+            Vector2 newTopLeft = new Vector2(_AABB.Position.X - 1, _AABB.Position.Y - 1);
 
             int endX = (int)_map.GetTileFromCoordinates(newTopLeft.X, newTopLeft.Y).X;
             int begX = Math.Max(endX, (int)_map.GetTileFromCoordinates(oldTopLeft.X, oldTopLeft.Y).X);
@@ -146,8 +147,8 @@ namespace MonoBlatformer.Objects
 
         public bool HasRightWall(out float rightWallX)
         {
-            Vector2 oldTopRight = new Vector2(_oldAABBPosition.X + _AABB.Width, _oldAABBPosition.Y + 1);
-            Vector2 newTopRight = new Vector2(_AABB.Position.X + _AABB.Width, _AABB.Position.Y + 1);
+            Vector2 oldTopRight = new Vector2(_oldAABBPosition.X + _AABB.Width + 1, _oldAABBPosition.Y + 1);
+            Vector2 newTopRight = new Vector2(_AABB.Position.X + _AABB.Width + 1, _AABB.Position.Y + 1);
 
             int endX = (int)_map.GetTileFromCoordinates(newTopRight.X, newTopRight.Y).X;
             int begX = Math.Min(endX, (int)_map.GetTileFromCoordinates(oldTopRight.X, oldTopRight.Y).X);
@@ -179,6 +180,27 @@ namespace MonoBlatformer.Objects
             return false;
         }
 
+        public bool CanFall()
+        {
+            var bottomLeft = new Vector2(_AABB.Position.X + 1, _AABB.Position.Y + _AABB.Height + 1);
+            var bottomRight = bottomLeft + new Vector2(_AABB.Width - 2, 0);
+
+            Vector2 mapTileCoords;
+            Tile tile;
+            for (var checkedTile = bottomLeft.X; ; checkedTile += _map.TileWidth)
+            {
+                checkedTile = Math.Min(checkedTile, bottomRight.X);
+                mapTileCoords = _map.GetTileFromCoordinates(checkedTile, bottomLeft.Y);
+                tile = _map.GetTile(mapTileCoords);
+                if (tile.IsSolid)
+                {
+                    return false;
+                }
+                if (checkedTile >= bottomRight.X)
+                    return true;
+            }
+        }
+
         public void UpdateGroundCollision()
         {
             float groundY = 0;
@@ -199,6 +221,7 @@ namespace MonoBlatformer.Objects
             float ceilingY = 0;
             if (_speed.Y < 0 && _AABB.Position.Y < _oldAABBPosition.Y && HasCeiling(out ceilingY))
             {
+                _hasCeiling = true;
                 _speed.Y = 0;
                 _AABB.Position = new Vector2(_AABB.Position.X, ceilingY);
             }

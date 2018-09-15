@@ -43,6 +43,10 @@ namespace MonoBlatformer.MapThings
             _tiles.Add(new Tile(TileType.Grass, true, true, false, false, new Rectangle(144, 192, 16, 16)));
             //11 undergrass
             _tiles.Add(new Tile(TileType.Grass, true, true, false, false, new Rectangle(0, 208, 16, 16)));
+            //12 bottom right corner glass
+            _tiles.Add(new Tile(TileType.Grass, true, true, false, false, new Rectangle(96, 112, 16, 16)));
+            //13 right grass wall
+            _tiles.Add(new Tile(TileType.Grass, true, true, false, false, new Rectangle(96, 96, 16, 16)));
         }
     }
 }

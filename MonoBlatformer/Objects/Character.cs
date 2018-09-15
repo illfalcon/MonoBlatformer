@@ -43,6 +43,66 @@ namespace MonoBlatformer.Objects
             _curAnimation = _idleAnimation;
         }
 
+        public bool CheckLeftLedge(out float ledgeX, out float ledgeY)
+        {
+            ledgeX = 0;
+            ledgeY = 0;
+            if (_hasLeftWall && _speed.Y >= 0 && !_hasCeiling)
+            {
+                float leftX = _AABB.Position.X - 1;
+                float topY = _AABB.Position.Y + 3;
+                float bottomY = topY + 3;
+
+                for (float checkedTile = topY; ; checkedTile++) //so it's better to return ground y
+                {
+                    int x = (int)_map.GetTileFromCoordinates(leftX, checkedTile).X;
+                    int y = (int)_map.GetTileFromCoordinates(leftX, checkedTile).Y;
+                    if (_map.GetTile(x, y).IsGround && !_map.GetTile(x, y - 1).IsGround)
+                    {
+                        ledgeX = _map.GetCoordinatesFromTile((int)_map.GetTileFromCoordinates(leftX, checkedTile).X + _map.TileWidth, (int)_map.GetTileFromCoordinates(leftX, checkedTile).Y).X;
+                        ledgeY = _map.GetCoordinatesFromTile((int)_map.GetTileFromCoordinates(leftX, checkedTile).X + _map.TileWidth, (int)_map.GetTileFromCoordinates(leftX, checkedTile).Y).Y;
+                        return true;
+                    }
+                    if (checkedTile >= bottomY)
+                        return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool CheckRightLedge(out float ledgeX, out float ledgeY)
+        {
+            ledgeX = 0;
+            ledgeY = 0;
+            if (_hasRightWall && _speed.Y >= 0 && !_hasCeiling)
+            {
+                float rightX = _AABB.Position.X + _AABB.Width + 1;
+                float topY = _AABB.Position.Y + 3;
+                float bottomY = topY + 3;
+
+                for (float checkedTile = topY; ; checkedTile++) //so it's better to return ground y
+                {
+                    int x = (int)_map.GetTileFromCoordinates(rightX, checkedTile).X;
+                    int y = (int)_map.GetTileFromCoordinates(rightX, checkedTile).Y;
+                    if (_map.GetTile(x, y).IsGround && !_map.GetTile(x, y - 1).IsGround)
+                    {
+                        ledgeX = _map.GetCoordinatesFromTile((int)_map.GetTileFromCoordinates(rightX, checkedTile).X, (int)_map.GetTileFromCoordinates(rightX, checkedTile).Y).X;
+                        ledgeY = _map.GetCoordinatesFromTile((int)_map.GetTileFromCoordinates(rightX, checkedTile).X, (int)_map.GetTileFromCoordinates(rightX, checkedTile).Y).Y;
+                        return true;
+                    }
+                    if (checkedTile >= bottomY)
+                        return false;
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void UpdatePlayer()
         {
             _input.Update();
@@ -128,12 +188,29 @@ namespace MonoBlatformer.Objects
 
             if (_curState == PlayerState.InAir)
             {
+                float ledgeX, ledgeY;
                 _curAnimation = _flyAnimation;
                 if (_isOnGround)
                 {
                     _curState = PlayerState.Stand;
                     _speed.Y = 0;
                     _curAnimation = _idleAnimation;
+                }
+                else if (CheckLeftLedge(out ledgeX, out ledgeY))
+                {
+                    _curState = PlayerState.OnLedge;
+                    _curAnimation = _ledgeAnimation;
+                    _fx = SpriteEffects.FlipHorizontally;
+                    _speed = Vector2.Zero;
+                    _AABB.Position = new Vector2(ledgeX, ledgeY);
+                }
+                else if (CheckRightLedge(out ledgeX, out ledgeY))
+                {
+                    _curState = PlayerState.OnLedge;
+                    _curAnimation = _ledgeAnimation;
+                    _fx = SpriteEffects.None;
+                    _speed = Vector2.Zero;
+                    _AABB.Position = new Vector2(ledgeX - _AABB.Width, ledgeY);
                 }
                 else
                 {
