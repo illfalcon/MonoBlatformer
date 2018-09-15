@@ -60,7 +60,11 @@ namespace MonoBlatformer.MapThings
             {
                 _tiles[i, Height - 3] = _tileManager.Tiles[11];
             }
-
+            _tiles[11, Height - 4] = _tileManager.Tiles[14];
+            for (int i = 12; i < Width; i++)
+            {
+                _tiles[i, Height - 4] = _tileManager.Tiles[15];
+            }
             _tiles[10, Height - 2] = _tileManager.Tiles[12];
             _tiles[10, Height - 3] = _tileManager.Tiles[13];
             _tiles[10, Height - 4] = _tileManager.Tiles[13];

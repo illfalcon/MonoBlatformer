@@ -33,6 +33,8 @@ namespace MonoBlatformer.Objects
         protected bool _hasRightWall;
         protected bool _hasCeiling;
 
+        protected bool _ignoringOneWays;
+
         public virtual void Initialize(Vector2 position, int width, int height, Map map)
         {
             _AABB = new AABB(position, width, height);
@@ -61,7 +63,7 @@ namespace MonoBlatformer.Objects
                     checkedTile = Math.Min(checkedTile, bottomRight.X);
                     mapTileCoords = _map.GetTileFromCoordinates(checkedTile, bottomLeft.Y);
                     tile = _map.GetTile(mapTileCoords);
-                    if (tile.IsGround)
+                    if (tile.IsSolid || (tile.IsOneWay && !_ignoringOneWays))
                     {
                         groundY = _map.GetCoordinatesFromTile((int)mapTileCoords.X, (int)mapTileCoords.Y).Y;
                         return true;
@@ -206,6 +208,7 @@ namespace MonoBlatformer.Objects
             float groundY = 0;
             if (_speed.Y >= 0 && _AABB.Position.Y >= _oldAABBPosition.Y && HasGround(out groundY))
             {
+                _ignoringOneWays = false;
                 _speed.Y = 0;
                 _AABB.Position = new Vector2(_AABB.Position.X, groundY - _AABB.Height);
                 _isOnGround = true;

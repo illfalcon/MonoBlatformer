@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MonoBlatformer.Objects
 {
-    public enum PlayerState { Stand, Run, InAir, OnLedge, Climbing }
+    public enum PlayerState { Stand, Run, InAir, OnLedge }
 
     public class Character : MovingObject
     {
@@ -26,8 +26,11 @@ namespace MonoBlatformer.Objects
         private Input _input;
         private PlayerState _curState;
         private SpriteEffects _fx;
+
         private bool _climbingLeftFlag;
         private bool _climbingRightFlag;
+        private bool _droppingFlag;
+
 
         private float _climbingGroundY;
         private float _climbingGroundX;
@@ -130,6 +133,12 @@ namespace MonoBlatformer.Objects
                         _speed.Y = -_jumpSpeed;
                         _isOnGround = false;
                         _curAnimation = _flyAnimation;
+                    } else if (_input.DownPressed && CanFall())
+                    {
+                        _ignoringOneWays = true;
+                        _isOnGround = false;
+                        _curAnimation = _flyAnimation;
+                        _curState = PlayerState.InAir;
                     }
                 }
                 else
@@ -197,11 +206,12 @@ namespace MonoBlatformer.Objects
                 _curAnimation = _flyAnimation;
                 if (_isOnGround)
                 {
+                    _droppingFlag = false;
                     _curState = PlayerState.Stand;
                     _speed.Y = 0;
                     _curAnimation = _idleAnimation;
                 }
-                else if (CheckLeftLedge(out ledgeX, out ledgeY))
+                else if (!_droppingFlag && CheckLeftLedge(out ledgeX, out ledgeY))
                 {
                     _curState = PlayerState.OnLedge;
                     _ledgeAnimation.Active = true;
@@ -212,7 +222,7 @@ namespace MonoBlatformer.Objects
                     _climbingGroundY = ledgeY;
                     _climbingGroundX = ledgeX;
                 }
-                else if (CheckRightLedge(out ledgeX, out ledgeY))
+                else if (!_droppingFlag && CheckRightLedge(out ledgeX, out ledgeY))
                 {
                     _curState = PlayerState.OnLedge;
                     _ledgeAnimation.Active = true;
@@ -240,6 +250,12 @@ namespace MonoBlatformer.Objects
                     _climbingLeftFlag = true;
                     _curAnimation = _flyAnimation;
                     ClimbLeft(_climbingGroundX, _climbingGroundY);
+                }
+                else if (_input.DownPressed)
+                {
+                    _droppingFlag = true;
+                    _curAnimation = _flyAnimation;
+                    _curState = PlayerState.InAir;
                 }
                 if (_climbingRightFlag)
                     ClimbRight(_climbingGroundX, _climbingGroundY);
