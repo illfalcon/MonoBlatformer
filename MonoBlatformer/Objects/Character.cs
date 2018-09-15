@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace MonoBlatformer.Objects
 {
-    public enum PlayerState { Stand, Run, InAir, OnLedge }
+    public enum PlayerState { Stand, Run, InAir, OnLedge, Climbing }
 
     public class Character : MovingObject
     {
@@ -26,6 +26,11 @@ namespace MonoBlatformer.Objects
         private Input _input;
         private PlayerState _curState;
         private SpriteEffects _fx;
+        private bool _climbingLeftFlag;
+        private bool _climbingRightFlag;
+
+        private float _climbingGroundY;
+        private float _climbingGroundX;
 
         public void Initialize(Vector2 position, int width, int height, Map map, Animation idle, Animation run, Animation fly,
             Animation jump, Animation land, Animation ledge, float runSpeed, float jumpSpeed)
@@ -199,23 +204,81 @@ namespace MonoBlatformer.Objects
                 else if (CheckLeftLedge(out ledgeX, out ledgeY))
                 {
                     _curState = PlayerState.OnLedge;
+                    _ledgeAnimation.Active = true;
                     _curAnimation = _ledgeAnimation;
                     _fx = SpriteEffects.FlipHorizontally;
                     _speed = Vector2.Zero;
-                    _AABB.Position = new Vector2(ledgeX, ledgeY);
+                    _AABB.Position = new Vector2(_AABB.Position.X, ledgeY);
+                    _climbingGroundY = ledgeY;
+                    _climbingGroundX = ledgeX;
                 }
                 else if (CheckRightLedge(out ledgeX, out ledgeY))
                 {
                     _curState = PlayerState.OnLedge;
+                    _ledgeAnimation.Active = true;
                     _curAnimation = _ledgeAnimation;
                     _fx = SpriteEffects.None;
                     _speed = Vector2.Zero;
-                    _AABB.Position = new Vector2(ledgeX - _AABB.Width, ledgeY);
+                    _AABB.Position = new Vector2(_AABB.Position.X, ledgeY);
+                    _climbingGroundY = ledgeY;
+                    _climbingGroundX = ledgeX;
                 }
                 else
                 {
                     _speed.Y += Constants.Gravity;
                 }
+            }
+            if (_curState == PlayerState.OnLedge)
+            {
+                if (_hasRightWall && _input.UpPressed && !_climbingRightFlag)
+                {
+                    _climbingRightFlag = true;
+                    _curAnimation = _flyAnimation;
+                    ClimbRight(_climbingGroundX, _climbingGroundY);
+                } else if (_hasLeftWall && _input.UpPressed && !_climbingLeftFlag)
+                {
+                    _climbingLeftFlag = true;
+                    _curAnimation = _flyAnimation;
+                    ClimbLeft(_climbingGroundX, _climbingGroundY);
+                }
+                if (_climbingRightFlag)
+                    ClimbRight(_climbingGroundX, _climbingGroundY);
+                if (_climbingLeftFlag)
+                    ClimbRight(_climbingGroundX, _climbingGroundY);
+            }
+
+        }
+
+        public void ClimbRight(float groundX, float groundY)
+        {
+            if (_AABB.Position.Y + _AABB.Height >= groundY)
+            {
+                _AABB.Position = new Vector2(_AABB.Position.X, _AABB.Position.Y - _runSpeed);
+            } else if (_AABB.Position.X <= groundX)
+            {
+                _AABB.Position = new Vector2(_AABB.Position.X + _runSpeed, _AABB.Position.Y);
+            }
+            else
+            {
+                _curState = PlayerState.InAir;
+                _climbingRightFlag = false;
+            }
+        }
+
+        public void ClimbLeft(float groundX, float groundY)
+        {
+            if (_AABB.Position.Y + _AABB.Height >= groundY)
+            {
+                _AABB.Position = new Vector2(_AABB.Position.X, _AABB.Position.Y - _runSpeed);
+            }
+            else if (_AABB.Position.X + _AABB.Width >= groundX)
+            {
+                _AABB.Position = new Vector2(_AABB.Position.X - _runSpeed, _AABB.Position.Y);
+            }
+            else
+            {
+                _curState = PlayerState.InAir;
+                _climbingLeftFlag = false;
             }
         }
 
