@@ -94,5 +94,28 @@ namespace MonoBlatformer.MapThings
         {
             return Tiles[(int)coords.X, (int)coords.Y];
         }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            int startCol = (int)GetTileFromCoordinates(Camera.Position.X, Camera.Position.Y).X;
+            int startRow = (int)GetTileFromCoordinates(Camera.Position.X, Camera.Position.Y).Y;
+            int endCol = (int)GetTileFromCoordinates(Camera.Position.X + Camera.Width, Camera.Position.Y).X;
+            int endRow = (int)GetTileFromCoordinates(Camera.Position.X, Camera.Position.Y + Camera.Height).Y;
+
+            if (endCol != _width)
+                endCol += 1;
+            if (endRow != _height)
+                endRow += 1;
+
+            Vector2 offset = new Vector2(GetCoordinatesFromTile(startCol, startRow).X - Camera.Position.X, GetCoordinatesFromTile(startCol, startRow).Y - Camera.Position.Y);
+
+            for (int i = startCol; i < endCol; i++)
+            {
+                for (int j = startRow; j < endRow; j++)
+                {
+                    spriteBatch.Draw(_tileSet, new Rectangle((int)_tileWidth * (i - startCol) + (int)offset.X, (int)_tileHeight * (j - startRow) + (int)offset.Y, _tileWidth, _tileHeight), _tiles[i, j].SourceRectangle, Color.White);
+                }
+            }
+        }
     }
 }

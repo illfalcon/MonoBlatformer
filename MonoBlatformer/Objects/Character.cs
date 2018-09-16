@@ -265,6 +265,27 @@ namespace MonoBlatformer.Objects
 
         }
 
+        public void UpdateCamera()
+        {
+            Camera.Position = new Vector2((int)(_AABB.Position.X - Camera.Width / 2), (int)_AABB.Position.Y - Camera.Height / 2);
+            if (Camera.Position.X < Camera.MinX)
+            {
+                Camera.Position.X = Camera.MinX;
+            }
+            if (Camera.Position.X > Camera.MaxX)
+            {
+                Camera.Position.X = Camera.MaxX;
+            }
+            if (Camera.Position.Y < Camera.MinY)
+            {
+                Camera.Position.Y = Camera.MinY;
+            }
+            if (Camera.Position.Y > Camera.MaxY)
+            {
+                Camera.Position.Y = Camera.MaxY;
+            }
+        }
+
         public void ClimbRight(float groundX, float groundY)
         {
             if (_AABB.Position.Y + _AABB.Height >= groundY)
@@ -303,8 +324,9 @@ namespace MonoBlatformer.Objects
             _oldAABBPosition = _AABB.Position;
             UpdatePlayer();
             UpdatePhysics();
-            _curAnimation.Position = new Vector2(_AABB.Position.X + (_AABB.Width - _curAnimation.FrameWidth) / 2, _AABB.Position.Y + (_AABB.Height - _curAnimation.FrameHeight));
+            _curAnimation.Position = new Vector2(_AABB.Position.X + (_AABB.Width - _curAnimation.FrameWidth) / 2, _AABB.Position.Y + (_AABB.Height - _curAnimation.FrameHeight)) - Camera.Position;
             _curAnimation.Update(gameTime);
+            UpdateCamera();
         }
 
         public void Draw(SpriteBatch spriteBatch)

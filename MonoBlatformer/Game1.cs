@@ -66,6 +66,7 @@ namespace MonoBlatformer
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Texture2D tileSet = Content.Load<Texture2D>("jungletileset");
             map.Initialize(100, 14, 16, 16, tileSet);
+            Camera.Initialize(Vector2.Zero, SCREENHEIGHT, SCREENWIDTH, map.TileWidth * map.Width - SCREENWIDTH, map.TileHeight * map.Height - SCREENHEIGHT, 0, 8);
 
             Texture2D jump = Content.Load<Texture2D>("Player/jump");
             Texture2D run = Content.Load<Texture2D>("Player/runsheet");
@@ -106,13 +107,7 @@ namespace MonoBlatformer
             GraphicsDevice.SetRenderTarget(MainTarget);
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, SamplerState.LinearWrap);
-            for (int i = 0; i < map.Width; i++)
-            {
-                for (int j = 0; j < map.Height; j++)
-                {
-                    spriteBatch.Draw(map.TileSet, new Rectangle(i * map.TileWidth, j * map.TileHeight, map.TileWidth, map.TileHeight), map.Tiles[i, j].SourceRectangle, Color.White);
-                }
-            }
+            map.Draw(spriteBatch);
             character.Draw(spriteBatch);
             spriteBatch.End();
 
