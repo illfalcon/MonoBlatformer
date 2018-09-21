@@ -197,6 +197,13 @@ namespace MonoBlatformer.Objects
                         _isOnGround = false;
                         _curAnimation = _flyAnimation;
                     }
+                    else if (_input.DownPressed && CanFall())
+                    {
+                        _ignoringOneWays = true;
+                        _isOnGround = false;
+                        _curAnimation = _flyAnimation;
+                        _curState = PlayerState.InAir;
+                    }
                 }
             }
 
@@ -204,6 +211,7 @@ namespace MonoBlatformer.Objects
             {
                 float ledgeX, ledgeY;
                 _curAnimation = _flyAnimation;
+                _ledgeAnimation.Reset();
                 if (_isOnGround)
                 {
                     _droppingFlag = false;
