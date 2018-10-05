@@ -1,0 +1,306 @@
+[
+  {
+    "Id": 0,
+    "SourceRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 0,
+      "Height": 0
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 0,
+      "Height": 0
+    },
+    "IsGround": false,
+    "IsSolid": false,
+    "IsEmpty": true,
+    "IsOneWay": false
+  },
+  {
+    "Id": 1,
+    "SourceRectangle": {
+      "X": 0,
+      "Y": 208,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 2,
+    "SourceRectangle": {
+      "X": 0,
+      "Y": 192,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 3,
+    "SourceRectangle": {
+      "X": 16,
+      "Y": 192,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 4,
+    "SourceRectangle": {
+      "X": 32,
+      "Y": 192,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 5,
+    "SourceRectangle": {
+      "X": 80,
+      "Y": 112,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 6,
+    "SourceRectangle": {
+      "X": 96,
+      "Y": 112,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 7,
+    "SourceRectangle": {
+      "X": 96,
+      "Y": 96,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 8,
+    "SourceRectangle": {
+      "X": 96,
+      "Y": 80,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 9,
+    "SourceRectangle": {
+      "X": 16,
+      "Y": 48,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 10,
+    "SourceRectangle": {
+      "X": 32,
+      "Y": 48,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 11,
+    "SourceRectangle": {
+      "X": 112,
+      "Y": 80,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 12,
+    "SourceRectangle": {
+      "X": 112,
+      "Y": 96,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 13,
+    "SourceRectangle": {
+      "X": 112,
+      "Y": 112,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 14,
+    "SourceRectangle": {
+      "X": 48,
+      "Y": 32,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  },
+  {
+    "Id": 15,
+    "SourceRectangle": {
+      "X": 48,
+      "Y": 48,
+      "Width": 16,
+      "Height": 16
+    },
+    "CollisionRectangle": {
+      "X": 0,
+      "Y": 0,
+      "Width": 16,
+      "Height": 16
+    },
+    "IsGround": true,
+    "IsSolid": true,
+    "IsEmpty": false,
+    "IsOneWay": false
+  }
+]

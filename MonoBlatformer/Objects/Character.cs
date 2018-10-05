@@ -67,7 +67,7 @@ namespace MonoBlatformer.Objects
                     int y = (int)_map.GetTileFromCoordinates(leftX, checkedTile).Y;
                     if (_map.GetTile(x, y).IsGround && !_map.GetTile(x, y - 1).IsGround)
                     {
-                        ledgeX = _map.GetCoordinatesFromTile((int)_map.GetTileFromCoordinates(leftX, checkedTile).X + _map.TileWidth, (int)_map.GetTileFromCoordinates(leftX, checkedTile).Y).X;
+                        ledgeX = _map.GetCoordinatesFromTile((int)_map.GetTileFromCoordinates(leftX, checkedTile).X, (int)_map.GetTileFromCoordinates(leftX, checkedTile).Y).X + _map.TileWidth;
                         ledgeY = _map.GetCoordinatesFromTile((int)_map.GetTileFromCoordinates(leftX, checkedTile).X + _map.TileWidth, (int)_map.GetTileFromCoordinates(leftX, checkedTile).Y).Y;
                         return true;
                     }
@@ -268,7 +268,7 @@ namespace MonoBlatformer.Objects
                 if (_climbingRightFlag)
                     ClimbRight(_climbingGroundX, _climbingGroundY);
                 if (_climbingLeftFlag)
-                    ClimbRight(_climbingGroundX, _climbingGroundY);
+                    ClimbLeft(_climbingGroundX, _climbingGroundY);
             }
 
         }

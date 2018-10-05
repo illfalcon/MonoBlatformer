@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoBlatformer.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,35 +41,15 @@ namespace MonoBlatformer.MapThings
         public void CreateMap()
         {
             _tiles = new Tile[Width, Height];
+            JSONSerializer json = new JSONSerializer();
+            int[,] tileIds = json.RestoreTwoDimArray<int>("Levels/Level1/map.json");
             for (int i = 0; i < Width; i++)
             {
                 for (int j = 0; j < Height; j++)
                 {
-                    _tiles[i, j] = _tileManager.Tiles[0];
+                    _tiles[i, j] = _tileManager.Tiles.SingleOrDefault(t => t.Id == tileIds[i, j]);
                 }
             }
-            for (int i = 0; i < Width; i++)
-            {
-                int j = i % 10 + 1;
-                _tiles[i, Height - 2] = _tileManager.Tiles[j];
-            }
-            for (int i = 0; i < Width; i++)
-            {
-                _tiles[i, Height - 1] = _tileManager.Tiles[11];
-            }
-            for (int i = 11; i < Width; i++)
-            {
-                _tiles[i, Height - 3] = _tileManager.Tiles[11];
-            }
-            _tiles[11, Height - 4] = _tileManager.Tiles[14];
-            for (int i = 12; i < Width; i++)
-            {
-                _tiles[i, Height - 4] = _tileManager.Tiles[15];
-            }
-            _tiles[10, Height - 2] = _tileManager.Tiles[12];
-            _tiles[10, Height - 3] = _tileManager.Tiles[13];
-            _tiles[10, Height - 4] = _tileManager.Tiles[13];
-            _tiles[10, Height - 5] = _tileManager.Tiles[13];
         }
 
         public Vector2 GetTileFromCoordinates(float wX, float wY)

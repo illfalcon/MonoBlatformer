@@ -65,7 +65,7 @@ namespace MonoBlatformer
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             Texture2D tileSet = Content.Load<Texture2D>("jungletileset");
-            map.Initialize(100, 14, 16, 16, tileSet);
+            map.Initialize(30, 14, 16, 16, tileSet);
             Camera.Initialize(Vector2.Zero, SCREENHEIGHT, SCREENWIDTH, map.TileWidth * map.Width - SCREENWIDTH, map.TileHeight * map.Height - SCREENHEIGHT, 0, 8);
 
             Texture2D jump = Content.Load<Texture2D>("Player/jump");

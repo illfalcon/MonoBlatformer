@@ -7,25 +7,23 @@ using System.Threading.Tasks;
 
 namespace MonoBlatformer.MapThings
 {
-    public enum TileType { Grass, Jungle, Empty, OneWay }
-
     public class Tile
     {
-        public Rectangle SourceRectangle { get; }
-        public TileType TileType { get; }
-        public bool IsGround { get; }
-        public bool IsSolid { get; }
-        public bool IsEmpty { get; }
-        public bool IsOneWay { get; }
+        public int Id { get; set; }
+        public Rectangle SourceRectangle { get; set; }
+        public Rectangle CollisionRectangle { get; set; }
+        public bool IsGround { get; set; }
+        public bool IsSolid { get; set; }
+        public bool IsEmpty { get; set; }
+        public bool IsOneWay { get; set; }
 
-        public Tile(TileType tileType, bool isGround, bool isSolid, bool isEmpty, bool isOneWay, Rectangle srcRect)
-        {
-            TileType = tileType;
-            IsGround = isGround;
-            IsSolid = isSolid;
-            IsEmpty = IsEmpty;
-            IsOneWay = isOneWay;
-            SourceRectangle = srcRect;
-        }
+        //public Tile(bool isGround, bool isSolid, bool isEmpty, bool isOneWay, Rectangle srcRect)
+        //{
+        //    IsGround = isGround;
+        //    IsSolid = isSolid;
+        //    IsEmpty = isEmpty;
+        //    IsOneWay = isOneWay;
+        //    SourceRectangle = srcRect;
+        //}
     }
 }
